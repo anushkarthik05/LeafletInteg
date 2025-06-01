@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input,Output, OnChanges, OnInit, SimpleChanges, EventEmitter } from '@angular/core';
 import * as L from 'leaflet';
 
 
@@ -10,6 +10,8 @@ import * as L from 'leaflet';
 export class LeafletMapComponent implements OnInit, OnChanges {
 
   @Input() videos: { date: string; videos: { id: string; timestampValue: string; title: string; url: string; latitude: string; longitude: string; }[]; }[] = [];
+  @Input() activeVideoId: string | null = null; // <-- for highlighting marker
+  @Output() markerClicked = new EventEmitter<string>(); // <-- emit video id
 
   map: L.Map | undefined;
   videoMarkers: {id: string, marker: L.Marker}[] = [];
@@ -31,17 +33,15 @@ export class LeafletMapComponent implements OnInit, OnChanges {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this.map);
     //this.addVideoMarkers();
-    L.marker([51.5, -0.09])
-      .addTo(this.map)
-      .bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
-
       this.addVideoMarkers();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('Changes detected:', changes);
     if (changes['videos'] && this.map) {
       this.addVideoMarkers();
+    }
+    if (changes['activeVideoId'] && this.map) {
+      this.highlightActiveMarker();
     }
   }
 
@@ -67,11 +67,39 @@ export class LeafletMapComponent implements OnInit, OnChanges {
         marker.closePopup();
       });
 
+      // Emit event on click
+        marker.on('click', () => {
+          this.markerClicked.emit(video.id);
+        });
+
         this.videoMarkers.push({ id: video.id, marker });
       });
     });
+
+    this.highlightActiveMarker();
   }
 
 
+  highlightActiveMarker() {
+  // Remove highlight class from all markers
+  this.videoMarkers.forEach(vm => {
+    const icon = vm.marker.getElement();
+    if (icon) {
+      icon.classList.remove('huechange');
+    }
+  });
+
+  // Highlight the active marker
+  if (this.activeVideoId) {
+    const active = this.videoMarkers.find(vm => vm.id === this.activeVideoId);
+    if (active) {
+      const icon = active.marker.getElement();
+      if (icon) {
+        icon.classList.add('huechange');
+      }
+      active.marker.openPopup();
+    }
+  }
+}
 }
 

@@ -1,7 +1,9 @@
 <p>video-list works!</p>
 
 <!-- <app-leaflet-map></app-leaflet-map> -->
-<app-leaflet-map [videos]="allAccordions"></app-leaflet-map>
+<app-leaflet-map [videos]="allAccordions"
+[activeVideoId]="activeVideoId"
+  (markerClicked)="scrollToVideo($event)"></app-leaflet-map>
 
 <button (click)="changeLatLng()">Change Lat/Lng</button>
 <!--Accordion Section-->
@@ -24,7 +26,7 @@
                             <div class="video-timestamp">{{video.timestamp}}</div>
                         </ng-template>
                         <ng-template pTemplate="content">
-                            <video width="100%" controls [src]="video.url" (play)="onVideoPlay(video.id)"></video>
+                            <video width="100%" controls [src]="video.url" [id]="video.id" (play)="onVideoPlay(video.id)"></video>
                         </ng-template>
                     </p-card>
             </div>
