@@ -1,0 +1,34 @@
+<p>video-list works!</p>
+
+<app-leaflet-map></app-leaflet-map>
+<!--<app-leaflet-map [videos]="allAccordions"></app-leaflet-map>-->
+
+<!--Accordion Section-->
+<p-accordion [activeIndex]="activeIndex">
+    <p-accordionTab
+        *ngFor="let accordion of allAccordions"
+        [header]="accordion.videos.length>0 ? accordion.date : accordion.date + ' (No videos)'"
+        [disabled]="accordion.videos.length === 0">
+
+        <div class="video-container"
+        *ngIf="accordion.videos.length > 0">
+            
+            <div class="row">
+                <div class="col-md-4 p-2" *ngFor="let video of accordion.videos" [id]="video.id">
+                    <p-card>
+                        <ng-template pTemplate="title">
+                            <div class="video-title">
+                                {{ video.title}}
+                            </div>
+                            <div class="video-timestamp">{{video.timestamp}}</div>
+                        </ng-template>
+                        <ng-template pTemplate="content">
+                            <video width="100%" controls [src]="video.url" (play)="onVideoPlay(video.id)"></video>
+                        </ng-template>
+                    </p-card>
+            </div>
+
+        </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
