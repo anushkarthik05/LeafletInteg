@@ -59,7 +59,7 @@ export class VideoMappingService {
         filename: "filevideo1.mp4",
         url: "https://86b851a0-7e8e-4788-84b7-fa0895d860b2.mdnplay.dev/shared-assets/videos/flower.mp4",
         timeStampInMS: "1748428540210",
-        latitude: "48.88281",
+        latitude: "28.88281",
         longitude: "9.085913"
       },
       {

@@ -39,6 +39,7 @@ export class LeafletMapComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('Changes detected:', changes);
     if (changes['videos'] && this.map) {
       this.addVideoMarkers();
     }
@@ -52,11 +53,20 @@ export class LeafletMapComponent implements OnInit, OnChanges {
     this.videoMarkers = [];
 
     // Add new markers
+    console.log('Adding video markers:', this.videos);
     this.videos.forEach(group => {
       group.videos.forEach(video => {
         const marker = L.marker([parseFloat(video.latitude), parseFloat(video.longitude)])
           .addTo(this.map!)
-          .bindPopup(`${video.title}<br>${video.url}`);
+          .bindPopup(`${video.title}<br>Latitude : ${video.latitude}<br>Longitude : ${video.longitude}`);
+
+        marker.on('mouseover', function () {
+        marker.openPopup();
+      });
+      marker.on('mouseout', function () {
+        marker.closePopup();
+      });
+
         this.videoMarkers.push({ id: video.id, marker });
       });
     });

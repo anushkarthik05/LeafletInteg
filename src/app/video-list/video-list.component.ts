@@ -32,4 +32,11 @@ export class VideoListComponent implements OnInit {
     const firstAccordionWithVideos = this.allAccordions.findIndex(acc => acc.videos.length > 0);
     this.activeIndex = firstAccordionWithVideos !== -1 ? firstAccordionWithVideos : null;
   }
+
+  changeLatLng(){
+    console.log("Changing lat lng");
+
+    this.allAccordions[0].videos[0].latitude = "51.505";
+    this.allAccordions[0].videos[0].longitude = "-0.09";
+  }
 }
