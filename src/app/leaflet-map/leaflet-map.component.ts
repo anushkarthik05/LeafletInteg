@@ -82,20 +82,27 @@ export class LeafletMapComponent implements OnInit, OnChanges {
 
   highlightActiveMarker() {
     console.log('Highlighting active marker:', this.activeVideoId);
-  // Remove highlight from all markers (reset to default icon)
-  this.videoMarkers.forEach(vm => {
-    vm.marker.setIcon(new L.Icon.Default());
-  });
+    // Remove highlight from all markers (reset to default icon)
+    this.videoMarkers.forEach(vm => {
+      vm.marker.setIcon(new L.Icon.Default());
+    });
 
-  // Highlight the active marker
-  if (this.activeVideoId) {
-    const active = this.videoMarkers.find(vm => vm.id === this.activeVideoId);
-    if (active) {
-      this.activeMarkerId = active.id; // Set the active marker ID
-      //active.marker.closePopup();
-      active.marker.openPopup();
+    // Highlight the active marker
+    if (this.activeVideoId) {
+      const active = this.videoMarkers.find(vm => vm.id === this.activeVideoId);
+      if (active) {
+        this.activeMarkerId = active.id; // Set the active marker ID
+        //active.marker.closePopup();
+        active.marker.openPopup();
+        this.centerMapOnMarker(active.marker);
+      }
     }
   }
-}
+
+  public centerMapOnMarker(activeMarker: L.Marker) {
+    if (activeMarker instanceof L.Marker && this.map) {
+      this.map.setView(activeMarker.getLatLng(), this.map.getZoom(), { animate: true });
+    }
+  }
 }
 
