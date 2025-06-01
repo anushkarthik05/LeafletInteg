@@ -9,7 +9,7 @@
 
 <button (click)="changeLatLng()">Change Lat/Lng</button>
 <!--Accordion Section-->
-<p-accordion [activeIndex]="activeIndex">
+<p-accordion [activeIndex]="activeIndex" (activeIndexChange)="onAccordionChange($event)">
     <p-accordionTab
         *ngFor="let accordion of allAccordions"
         [header]="accordion.videos.length>0 ? accordion.date : accordion.date + ' (No videos)'"
@@ -19,7 +19,7 @@
         *ngIf="accordion.videos.length > 0">
             
             <div class="row">
-                <div class="col-md-4 p-2" *ngFor="let video of accordion.videos" [id]="video.id">
+                <div class="col-md-4 p-2" *ngFor="let video of accordion.videos">
                     <p-card>
                         <ng-template pTemplate="title">
                             <div class="video-title">

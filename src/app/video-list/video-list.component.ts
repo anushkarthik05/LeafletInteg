@@ -41,29 +41,68 @@ export class VideoListComponent implements OnInit {
   }
 
   scrollToVideo(videoId: string) {
-  const el = document.getElementById(videoId);
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    el.classList.add('highlight');
-    setTimeout(() => el.classList.remove('highlight'), 1500);
+  const accordionIndex = this.allAccordions.findIndex(acc =>
+    acc.videos.some(video => video.id === videoId)
+  );
+  if (accordionIndex !== -1) {
+    this.activeIndex = accordionIndex; // Open the correct accordion tab
+
+    // Pause all videos not in the active accordion
+    this.allAccordions.forEach((accordion, idx) => {
+      if (idx !== accordionIndex) {
+        accordion.videos.forEach(video => {
+          const vidEl = document.getElementById(video.id) as HTMLVideoElement | null;
+          if (vidEl && !vidEl.paused) {
+            vidEl.pause();
+          }
+        });
+      }
+    });
   }
-  this.activeVideoId = videoId; // highlight marker
+
+  // Scroll to the video element after the accordion is open
+  setTimeout(() => {
+    const el = document.getElementById(videoId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('highlight');
+      setTimeout(() => el.classList.remove('highlight'), 1500);
+    }
+    this.activeVideoId = videoId; // highlight marker
+  }, 200); // Delay to allow accordion animation
 }
 
   onVideoPlay(videoId: string) {
     document.querySelectorAll('video').forEach((vid: HTMLVideoElement) => {
-    if (vid.id !== videoId){
-      vid.pause();
-    }
-  });
+      if (vid.id !== videoId){
+        vid.pause();
+      }
+    });
 
-  if (this.activeVideoId === videoId) {
-    this.activeVideoId = null;
-    setTimeout(() => {
+    if (this.activeVideoId === videoId) {
+      this.activeVideoId = null;
+      setTimeout(() => {
+        this.activeVideoId = videoId;
+      }, 0);
+    } else {
       this.activeVideoId = videoId;
-    }, 0);
-  } else {
-    this.activeVideoId = videoId;
+    }
   }
-}
+
+  onAccordionChange(newIndex: number) {
+    this.activeIndex = newIndex;
+
+    // Pause all videos not in the active accordion
+    this.allAccordions.forEach((accordion, idx) => {
+      if (idx !== newIndex) {
+        accordion.videos.forEach(video => {
+          const vidEl = document.getElementById(video.id) as HTMLVideoElement | null;
+          if (vidEl && !vidEl.paused) {
+            vidEl.pause();
+          }
+        });
+      }
+    });
+  }
+
 }
