@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import * as L from 'leaflet';
 
 
@@ -7,7 +7,10 @@ import * as L from 'leaflet';
   templateUrl: './leaflet-map.component.html',
   styleUrls: ['./leaflet-map.component.scss']
 })
-export class LeafletMapComponent implements OnInit {
+export class LeafletMapComponent implements OnInit, OnChanges {
+
+  @Input() videos: { date: string; videos: { id: string; timestampValue: string; title: string; url: string; latitude: string; longitude: string; }[]; }[] = [];
+
   map: L.Map | undefined;
   videoMarkers: {id: string, marker: L.Marker}[] = [];
   activeMarkerId: string | null = null;
@@ -31,5 +34,34 @@ export class LeafletMapComponent implements OnInit {
     L.marker([51.5, -0.09])
       .addTo(this.map)
       .bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
+
+      this.addVideoMarkers();
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['videos'] && this.map) {
+      this.addVideoMarkers();
+    }
+  }
+
+  addVideoMarkers(): void {
+    if (!this.map) return;
+
+    // Remove existing markers
+    this.videoMarkers.forEach(vm => this.map!.removeLayer(vm.marker));
+    this.videoMarkers = [];
+
+    // Add new markers
+    this.videos.forEach(group => {
+      group.videos.forEach(video => {
+        const marker = L.marker([parseFloat(video.latitude), parseFloat(video.longitude)])
+          .addTo(this.map!)
+          .bindPopup(`${video.title}<br>${video.url}`);
+        this.videoMarkers.push({ id: video.id, marker });
+      });
+    });
+  }
+
+
 }
+
