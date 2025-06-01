@@ -1,9 +1,11 @@
 <p>video-list works!</p>
 
 <!-- <app-leaflet-map></app-leaflet-map> -->
-<app-leaflet-map [videos]="allAccordions"
-[activeVideoId]="activeVideoId"
-  (markerClicked)="scrollToVideo($event)"></app-leaflet-map>
+<app-leaflet-map
+  [videos]="allAccordions"
+  [activeVideoId]="activeVideoId"
+  (markerClicked)="scrollToVideo($event)">
+</app-leaflet-map>
 
 <button (click)="changeLatLng()">Change Lat/Lng</button>
 <!--Accordion Section-->

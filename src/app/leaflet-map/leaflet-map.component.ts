@@ -81,22 +81,18 @@ export class LeafletMapComponent implements OnInit, OnChanges {
 
 
   highlightActiveMarker() {
-  // Remove highlight class from all markers
+    console.log('Highlighting active marker:', this.activeVideoId);
+  // Remove highlight from all markers (reset to default icon)
   this.videoMarkers.forEach(vm => {
-    const icon = vm.marker.getElement();
-    if (icon) {
-      icon.classList.remove('huechange');
-    }
+    vm.marker.setIcon(new L.Icon.Default());
   });
 
   // Highlight the active marker
   if (this.activeVideoId) {
     const active = this.videoMarkers.find(vm => vm.id === this.activeVideoId);
     if (active) {
-      const icon = active.marker.getElement();
-      if (icon) {
-        icon.classList.add('huechange');
-      }
+      this.activeMarkerId = active.id; // Set the active marker ID
+      //active.marker.closePopup();
       active.marker.openPopup();
     }
   }

@@ -51,6 +51,13 @@ export class VideoListComponent implements OnInit {
 }
 
   onVideoPlay(videoId: string) {
-    this.activeVideoId = videoId; // highlight marker
+  if (this.activeVideoId === videoId) {
+    this.activeVideoId = null;
+    setTimeout(() => {
+      this.activeVideoId = videoId;
+    }, 0);
+  } else {
+    this.activeVideoId = videoId;
   }
+}
 }
