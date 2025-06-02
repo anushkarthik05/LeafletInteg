@@ -27,7 +27,7 @@ export class LeafletMapComponent implements OnInit, OnChanges {
       shadowUrl: 'assets/images/marker-shadow.png'
     });
 
-    this.map = L.map('map').setView([51.505, -0.09], 13);
+    this.map = L.map('map').setView([51.505, -0.09], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -77,6 +77,10 @@ export class LeafletMapComponent implements OnInit, OnChanges {
     });
 
     this.highlightActiveMarker();
+
+    if (this.videoMarkers.length > 0 && !this.activeVideoId) {
+      this.centerMapOnMarker(this.videoMarkers[0].marker);
+    }
   }
 
 
